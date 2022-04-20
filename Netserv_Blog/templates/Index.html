@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h1>Anouncements & Posts</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                <li class="breadcrumb-item active">Blog</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section dashboard">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Post your Update </h5>
+                        <form class="row g-3">
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" id="floatingName" placeholder="Title">
+                            </div>
+        
+                            <div class="col-md-11">
+                                <div class="form-floating">
+                                    <textarea class="form-control" placeholder="Address" id="floatingTextarea"
+                                        style="height: 100px;"></textarea>
+                                    <label for="floatingTextarea"> More to Say</label>
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </div>
+                        </form><!-- End floating Labels Form -->
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Check your Calender</h5>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <!-- Left side columns -->
+            <div class="col-lg-8">
+                <div class="row">
+
+                    <!-- Default Card -->
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ card.title }}</h5>
+                            {{ card.post }}
+                        </div>
+                    </div>
+                    <!-- End Default Card -->
+                </div>
+            </div><!-- End Left side columns -->
+
+            <!-- Right side columns -->
+            <div class="col-lg-4">
+                <!-- News & Updates Traffic -->
+                <div class="card">
+                    <div class="filter">
+                        <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                            <li class="dropdown-header text-start">
+                                <h6>Filter</h6>
+                            </li>
+
+                            <li><a class="dropdown-item" href="#">Today</a></li>
+                            <li><a class="dropdown-item" href="#">This Month</a></li>
+                            <li><a class="dropdown-item" href="#">This Year</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="card-body pb-0">
+                        <h5 class="card-title">News &amp; Updates <span>| Today</span></h5>
+
+                        <div class="news">
+                            <div class="post-item clearfix">
+                                <img src="{% static 'assets/img/news-1.jpg' %}" alt="">
+                                <h4><a href="#">Nihil blanditiis at in nihil autem</a></h4>
+                                <p>Sit recusandae non aspernatur laboriosam. Quia enim eligendi sed ut harum...</p>
+                            </div>
+
+                            <div class="post-item clearfix">
+                                <img src="{% static 'assets/img/news-2.jpg' %}" alt="">
+                                <h4><a href="#">Quidem autem et impedit</a></h4>
+                                <p>Illo nemo neque maiores vitae officiis cum eum turos elan dries werona nande...
+                                </p>
+                            </div>
+
+                            <div class="post-item clearfix">
+                                <img src="{% static 'assets/img/news-3.jpg' %}" alt="">
+                                <h4><a href="#">Id quia et et ut maxime similique occaecati ut</a></h4>
+                                <p>Fugiat voluptas vero eaque accusantium eos. Consequuntur sed ipsam et totam...
+                                </p>
+                            </div>
+
+                        </div>
+                        <!-- End sidebar recent posts-->
+
+                    </div>
+                </div><!-- End News & Updates -->
+
+            </div><!-- End Right side columns -->
+
+        </div>
+    </section>
+
+</main><!-- End #main -->
+
+
+
+
+
+{% endblock content %}

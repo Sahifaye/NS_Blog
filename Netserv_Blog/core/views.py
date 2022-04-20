@@ -1,0 +1,81 @@
+from email.mime import message
+from django.shortcuts import render, redirect
+from django.http import HttpResponse
+from django.contrib.auth import authenticate, login, logout
+from .models import Profile
+from .forms import ProfileForm
+from django.contrib.auth.models import User
+
+
+# Create your views here.
+def Register(request):
+    messages = []
+    print (">>>>")
+    if request.POST:
+        username = request.POST['username']
+        email = request.POST['email']
+        name=request.POST['name']
+        if name.__contains__(' '):
+            first_name=name.split(" ")[0]
+            last_name=name.split(" ")[1]
+        else:
+            first_name=name
+        password1 = request.POST['password1']
+        password2 = request.POST['password2']
+        print(password1, password2)
+        if password1 != password2:
+            messages.append("Passwords do not match.")
+            return redirect('/register')
+ 
+        user = User.objects.create_user(username, email, password1)
+        user.first_name = first_name
+        user.last_name = last_name
+        user.save()
+        messages.append("User Registered , Please Login with your credentials.")
+        return render(request, 'base_templates/login.html', {'messages':messages}) 
+    return render(request, 'base_templates/register.html', {})
+
+
+def Login(request):
+    if request.method == "POST":
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        messages = []
+        user = authenticate(username=username, password=password)
+        print(user)
+        if user is not None:
+            login(request, user)
+            messages.append("Successfully Logged In")
+            return redirect("home")
+        else:
+            messages.append("Username/Password not found OR Invalid Credentials")
+            return render(request, 'base_templates/login.html', {'messages': messages})
+
+    else:
+        return render(request, 'base_templates/login.html', {})
+
+def Logout(request):
+    logout(request)
+    return render(request, 'index.html', {})
+
+
+def EditProfile(request):
+    try:
+        profile = request.user.profile
+    except Profile.DoesNotExist:
+        profile = Profile(user=request.user)
+
+    print(profile)
+    if request.method == "POST":
+        q_dict = {k:v for k, v in request.POST.items()}
+        print(q_dict)
+        form = ProfileForm(data=request.POST, files=request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()
+            message = "Data Saved Successfully"
+            print("Data Saved Successfully .")
+            return render(request, 'base_templates/profile.html', {})
+    else:
+        return render(request, 'base_templates/profile.html', {})
+
+
