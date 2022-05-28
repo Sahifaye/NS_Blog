@@ -56,7 +56,7 @@ def Login(request):
 
 def Logout(request):
     logout(request)
-    return render(request, 'index.html', {})
+    return redirect("home")
 
 
 def EditProfile(request):
@@ -76,6 +76,8 @@ def EditProfile(request):
             print("Data Saved Successfully .")
             return render(request, 'base_templates/profile.html', {})
     else:
-        return render(request, 'base_templates/profile.html', {})
+        profile_form = ProfileForm()
+        return render(request, 'base_templates/profile.html', {'form':profile_form})
+        # return render(request, 'base_templates/profile_form_test.html', {'form':profile_form})
 
 

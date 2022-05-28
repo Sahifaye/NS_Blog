@@ -1,13 +1,39 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load widget_tweaks %}
+
+{% block custom_style %}
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+<style>
+    .gedf-wrapper {
+        margin-top: 0.97rem;
+    }
+
+    .gedf-row {
+        padding-left: 8rem;
+    }
+
+    @media (min-width: 992px) {
+        .gedf-main {
+            padding-left: 4rem;
+            padding-right: 4rem;
+        }
+
+        .gedf-card {
+            margin-bottom: 2.77rem;
+        }
+    }
+</style>
+{% endblock custom_style %}
 
 {% block content %}
+
 <main id="main" class="main">
     <div class="pagetitle">
         <h1>Anouncements & Posts</h1>
         <nav>
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
                 <li class="breadcrumb-item active">Blog</li>
             </ol>
         </nav>
@@ -19,56 +45,104 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Post your Update </h5>
-                        <form class="row g-3">
+                        <form class="row g-3" action="{% url 'add_post' %}" enctype="multipart/form-data" method="POST">
+                            {% csrf_token %}
                             <div class="col-md-6">
-                                <input type="text" class="form-control" id="floatingName" placeholder="Title">
-                            </div>
-        
-                            <div class="col-md-11">
                                 <div class="form-floating">
-                                    <textarea class="form-control" placeholder="Address" id="floatingTextarea"
-                                        style="height: 100px;"></textarea>
-                                    <label for="floatingTextarea"> More to Say</label>
+                                    <!-- <input type="text" class="form-control" id="title" placeholder="Title"> -->
+                                    {{ form.title|add_class:"form-control"|attr:"placeholder:Title"|attr:"id:title"}}
+                                    <label for="floatingTextarea"> Title </label>
                                 </div>
                             </div>
-                            <div class="text-center">
+                            <div class="col-md-3">
+                                <div class="form-floating mb-3">
+                                    {{ form.topic|add_class:"form-select"|attr:"id:topic"}}
+                                    <label for="floatingSelect">Topic</label>
+                                </div>
+                            </div>
+                            <div class="col-md-9">
+                                <label class="btn btn-outline-info text-dark" for="id_image">
+                                    <i class="bi bi-upload" style="font-size: 1rem;"></i>
+                                    Click to Upload Image
+                                    {{ form.image|attr:"accept:image/*" |attr:"id:id_image" |attr:"hidden"|attr:"onchange:$('#upload-file-info').text(this.files[0].name)" }}
+                                </label>
+                                <span class='label label-info px-2' id="upload-file-info"></span>
+
+                            </div>
+                            <div class="col-md-11">
+                                <div class="form-floating">
+                                    <!-- <textarea class="form-control" placeholder="content" id="content"
+                                        style="height: 100px;"></textarea> -->
+                                    {{ form.content|attr:"id:content"}}
+                                    <label for="floatingTextarea"> Content </label>
+                                </div>
+                            </div>
+                            <div class="text-left">
                                 <button type="submit" class="btn btn-primary">Submit</button>
                             </div>
                         </form><!-- End floating Labels Form -->
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-4">
+                <!-- <div class="col-md-8"> -->
+                <!--- \\\\\\\Post-->
+                {% for post in posts %}
                 <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Check your Calender</h5>
-                        
-                    </div>
-                </div>
-            </div>
-        </div>
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="p-2">
+                                    {% if post.author.profile.image %}
+                                    <img class="rounded-circle" width="45" src="{{post.author.profile.image.url}}"
+                                        alt="" style="object-fit: cover; object-position: 10% 10%;">
 
+                                    {% else %}
+                                    <i class="bi bi-person"></i>
+                                    {% endif %}
+                                </div>
+                                <div class="p-2">
+                                    <div class="h4 text-muted">{{ post.author.first_name}} {{ post.author.last_name}}</div>
 
-        <div class="row">
-            <!-- Left side columns -->
-            <div class="col-lg-8">
-                <div class="row">
-
-                    <!-- Default Card -->
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ card.title }}</h5>
-                            {{ card.post }}
+                                </div>
+                            </div>
+                            <div class="d-flex flex-row-reverse align-self-end">
+                                <div class="text-muted h7 mb-2"> <i class="fa fa-clock-o"></i>{{ post.created_at }}
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <!-- End Default Card -->
-                </div>
-            </div><!-- End Left side columns -->
 
-            <!-- Right side columns -->
+                    </div>
+                    {% if post.image %}
+                    <div class="d-flex flex-row justify-content-center" style="background-color:aliceblue;">
+                        <img src="{{ post.image}}" class="card-img-top" alt="{{ post.title }}"
+                            style="max-height:400px; max-width: 437px; object-fit: cover; object-position: 0 15%;">
+                    </div>
+                    {% endif %}
+                    <div class="card-body">
+
+                        <a class="card-link" href="#">
+                            <h5 class="card-title">{{post.title | safe }}</h5>
+                        </a>
+
+                        <p class="card-text">
+                            {{ post.content | safe }}
+                        </p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="#"  class="card-link likebutton" data-catid="{{post.id}}">
+                            <i class="bi bi-hand-thumbs-up" id="like{{post.id}}" ></i> Like</a>
+                        <a href="#" class="card-link"><i class="bi bi-chat-dots"></i> Comment</a>
+                    </div>
+                </div>
+                {% endfor %}
+                <!-- Post /////-->
+
+
+                <!-- </div> -->
+            </div>
+
             <div class="col-lg-4">
                 <!-- News & Updates Traffic -->
-                <div class="card">
+                <div class="card" style="max-height: max-content">
                     <div class="filter">
                         <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
                         <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
@@ -84,37 +158,31 @@
 
                     <div class="card-body pb-0">
                         <h5 class="card-title">News &amp; Updates <span>| Today</span></h5>
-
+                        {% for news_post in news %}
                         <div class="news">
                             <div class="post-item clearfix">
-                                <img src="{% static 'assets/img/news-1.jpg' %}" alt="">
-                                <h4><a href="#">Nihil blanditiis at in nihil autem</a></h4>
-                                <p>Sit recusandae non aspernatur laboriosam. Quia enim eligendi sed ut harum...</p>
-                            </div>
+                                {% if news_post.image %}
+                                <img src="{{ news_post.image}}" alt="">
+                                {% else %}
+                                <i class="bi bi-newspaper" style="font-size: 3rem;"></i>
+                                {% endif %}
+                                <h4><a href="#">{{ news_post.title }} </a></h4>
+                                <p>{{ news_post.content | safe }}</p>
 
-                            <div class="post-item clearfix">
-                                <img src="{% static 'assets/img/news-2.jpg' %}" alt="">
-                                <h4><a href="#">Quidem autem et impedit</a></h4>
-                                <p>Illo nemo neque maiores vitae officiis cum eum turos elan dries werona nande...
-                                </p>
-                            </div>
-
-                            <div class="post-item clearfix">
-                                <img src="{% static 'assets/img/news-3.jpg' %}" alt="">
-                                <h4><a href="#">Id quia et et ut maxime similique occaecati ut</a></h4>
-                                <p>Fugiat voluptas vero eaque accusantium eos. Consequuntur sed ipsam et totam...
-                                </p>
                             </div>
 
                         </div>
                         <!-- End sidebar recent posts-->
-
+                        {% endfor %}
                     </div>
                 </div><!-- End News & Updates -->
 
-            </div><!-- End Right side columns -->
-
+            </div>
         </div>
+
+
+
+
     </section>
 
 </main><!-- End #main -->
@@ -124,3 +192,26 @@
 
 
 {% endblock content %}
+
+
+{% block custom_js %} 
+<script type="text/javascript"> 
+    $('.likebutton').click(function(){ 
+    var id; 
+    id = $(this).attr("data-catid"); 
+    $.ajax( 
+    { 
+        type:"GET", 
+        url: "like", 
+        data:{ 
+                 post_id: id 
+    }, 
+    success: function( data ) 
+    { 
+        $( '#like'+ id ).removeClass('bi bi-hand-thumbs-up'); 
+        $( '#like'+ id ).addClass('bi bi-hand-thumbs-up-fill text-primary'); } 
+    }) 
+});
+    </script>
+
+{% endblock custom_js %}

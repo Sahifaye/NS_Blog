@@ -20,7 +20,7 @@
         <h1>Profile</h1>
         <nav>
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
                 <li class="breadcrumb-item">Users</li>
                 <li class="breadcrumb-item active">Profile</li>
             </ol>
@@ -35,7 +35,7 @@
                     <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
 
                         {% if request.user.profile.image %}
-                        <img src="{% static user.profile.image.url %}" alt="Profile" class="rounded-circle">
+                        <img src="{{user.profile.image.url}}" alt="Profile" class="rounded">
                         {% endif %}
 
                         <!-- <img src="assets/img/profile-img.jpg" alt="Profile" class="rounded-circle"> -->
@@ -126,21 +126,22 @@
 
                                 {% endif %}
                                 <!-- Profile Edit Form -->
-                                <form method="POST" action="{% url 'editProfile' %}"> {% csrf_token %}
+                                <form method="POST" enctype="multipart/form-data" action="{% url 'editProfile' %}"> {% csrf_token %}
                                     <div class="row mb-3">
                                         <label for="profileImage" class="col-md-4 col-lg-3 col-form-label">Profile
                                             Image</label>
                                         <div class="col-md-8 col-lg-9">
                                             {% if request.user.profile.image %}
-                                            <img src="{% static user.profile.image.url %}" alt="Profile">
+                                            <img src="{{user.profile.image.url}}" alt="Profile" class="rounded">
                                             {% endif %}
                                             <!-- <img src="assets/img/profile-img.jpg" alt="Profile"> -->
                                             <div class="pt-2">
-                                                <div class="file">
-                                                    <i class="bi bi-upload">
-                                                        <input id='input-file' type='file' />
-                                                    </i>
-                                                </div>
+                                                <label class="btn btn-outline-info text-dark" for="id_image">
+                                                    <i class="bi bi-upload" style="font-size: 1rem;"></i>
+                                                     
+                                                     <input name ="image" accept="image/*" type="file" id="id_image" hidden onchange="$('#upload-file-info').text(this.files[0].name)">
+                                                </label>
+                                                <span class='label label-info px-2' id="upload-file-info"></span>
                                                 <div class="btn btn-danger btn-sm" title="Remove my profile image"><i
                                                         class="bi bi-trash"></i>
                                                 </div>
