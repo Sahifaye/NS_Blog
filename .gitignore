@@ -127,3 +127,5 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+Netserv_Blog/static/profile_pics/
+Netserv_Blog/static/post_pics/
