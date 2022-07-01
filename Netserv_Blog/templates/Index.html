@@ -23,6 +23,14 @@
             margin-bottom: 2.77rem;
         }
     }
+
+
+    .deletebutton {
+        position: absolute;
+        right: 0;
+        margin-right: 30px;
+        border: 3px;
+    }
 </style>
 {% endblock custom_style %}
 
@@ -100,7 +108,8 @@
                                     {% endif %}
                                 </div>
                                 <div class="p-2">
-                                    <div class="h4 text-muted">{{ post.author.first_name}} {{ post.author.last_name}}</div>
+                                    <div class="h4 text-muted">{{ post.author.first_name}} {{ post.author.last_name}}
+                                    </div>
 
                                 </div>
                             </div>
@@ -112,7 +121,7 @@
 
                     </div>
                     {% if post.image %}
-                    <div class="d-flex flex-row justify-content-center" style="background-color:aliceblue;">
+                    <div class="d-flex flex-row justify-content-between" style="background-color:aliceblue;">
                         <img src="{{ post.image}}" class="card-img-top" alt="{{ post.title }}"
                             style="max-height:400px; max-width: 437px; object-fit: cover; object-position: 0 15%;">
                     </div>
@@ -128,9 +137,12 @@
                         </p>
                     </div>
                     <div class="card-footer">
-                        <a href="#"  class="card-link likebutton" data-catid="{{post.id}}">
-                            <i class="bi bi-hand-thumbs-up" id="like{{post.id}}" ></i> Like</a>
-                        <a href="#" class="card-link"><i class="bi bi-chat-dots"></i> Comment</a>
+                        <button href="#" class="btn btn-light likebutton m-2" data-catid="{{post.id}}">
+                            <i class="bi bi-hand-thumbs-up" id="like{{post.id}}"></i> Like</a>
+                        <button href="#" class="btn btn-light commentbuttom"><i class="bi bi-chat-dots"></i> Comment</a>
+                        
+                        <button href="#" class="btn btn-danger deletebutton" ><i class="bi bi-trash"></i> Delete</a>
+                        
                     </div>
                 </div>
                 {% endfor %}
@@ -194,24 +206,24 @@
 {% endblock content %}
 
 
-{% block custom_js %} 
-<script type="text/javascript"> 
-    $('.likebutton').click(function(){ 
-    var id; 
-    id = $(this).attr("data-catid"); 
-    $.ajax( 
-    { 
-        type:"GET", 
-        url: "like", 
-        data:{ 
-                 post_id: id 
-    }, 
-    success: function( data ) 
-    { 
-        $( '#like'+ id ).removeClass('bi bi-hand-thumbs-up'); 
-        $( '#like'+ id ).addClass('bi bi-hand-thumbs-up-fill text-primary'); } 
-    }) 
-});
-    </script>
+{% block custom_js %}
+<script type="text/javascript">
+    $('.likebutton').click(function () {
+        var id;
+        id = $(this).attr("data-catid");
+        $.ajax(
+            {
+                type: "GET",
+                url: "like",
+                data: {
+                    post_id: id
+                },
+                success: function (data) {
+                    $('#like' + id).removeClass('bi bi-hand-thumbs-up');
+                    $('#like' + id).addClass('bi bi-hand-thumbs-up-fill text-primary');
+                }
+            })
+    });
+</script>
 
 {% endblock custom_js %}

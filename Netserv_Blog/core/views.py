@@ -1,6 +1,6 @@
-from email.mime import message
+from email.mime import image, message
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.contrib.auth import authenticate, login, logout
 from .models import Profile
 from .forms import ProfileForm
@@ -58,6 +58,16 @@ def Logout(request):
     logout(request)
     return redirect("home")
 
+def delete_ProfileImage(request):
+    try:
+        profile = request.user.profile
+    except Profile.DoesNotExist:
+        profile = Profile(user=request.user)
+    print(">?>>>>>???>>>>", request.user)
+    q = Profile.objects.filter(user=request.user).update(image="")
+    print(q)
+
+    return JsonResponse({"response":True})
 
 def EditProfile(request):
     try:
@@ -65,7 +75,7 @@ def EditProfile(request):
     except Profile.DoesNotExist:
         profile = Profile(user=request.user)
 
-    print(profile)
+    print(">>>>>>>",profile)
     if request.method == "POST":
         q_dict = {k:v for k, v in request.POST.items()}
         print(q_dict)

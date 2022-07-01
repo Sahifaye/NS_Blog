@@ -2,31 +2,6 @@
 {% load static %}
 {% load widget_tweaks %}
 
-{% block custom_style %}
-<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-<style>
-
-        .h7 {
-            font-size: 1.0rem;
-        }
-
-        .gedf-wrapper {
-            margin-top: 0.97rem;
-        }
-
-        @media (min-width: 992px) {
-            .gedf-main {
-                padding-left: 4rem;
-                padding-right: 4rem;
-            }
-            .gedf-card {
-                margin-bottom: 2.77rem;
-            }
-        }
-
-</style>
-
-{% endblock custom_style %}
 
 
 {% block content %}
@@ -41,62 +16,87 @@
             </ol>
         </nav>
     </div><!-- End Page Title -->
-       
 
-<div class="container gedf-wrapper">
-    <div class="row">
-        
-        <div class="col-md-8">
-            <!--- \\\\\\\Post-->
-            {% for post in posts %}
-            <div class="card" >
-                <div class="card-header" >
-                    <div class="d-flex justify-content-between align-items-center">
+
+    <div class="container gedf-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <!-- <div class="col-md-8"> -->
+                <!--- \\\\\\\Post-->
+                {% for post in posts %}
+                <div class="card">
+                    <div class="card-header">
                         <div class="d-flex justify-content-between align-items-center">
-                            <div class="mr-4">
-                                {% if post.author.profile.image %}
-                                <img class="rounded-circle" width="45" src="{{post.author.profile.image.url}}" alt="">
-                                
-                                {% else %}
-                                <i class="bi bi-person"></i>
-                                {% endif %}
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="p-2">
+                                    {% if post.author.profile.image %}
+                                    <img class="rounded-circle" width="45" src="{{post.author.profile.image.url}}"
+                                        alt="" style="object-fit: cover; object-position: 10% 10%;">
+
+                                    {% else %}
+                                    <i class="bi bi-person"></i>
+                                    {% endif %}
+                                </div>
+                                <div class="p-2">
+                                    <div class="h4 text-muted">{{ post.author.first_name}} {{ post.author.last_name}}
+                                    </div>
+
+                                </div>
                             </div>
-                            <div class="ml-2">
-                                <div class="h4 text-muted">{{ post.author.first_name}} {{ post.author.last_name}}</div>    
-                                <div class="h5 m-0">@{{post.author.username}}</div>
-                                
+                            <div class="d-flex flex-row-reverse align-self-end">
+                                <div class="text-muted h7 mb-2"> <i class="fa fa-clock-o mx-1"></i>{{ post.created_at }}
+                                </div>
                             </div>
+                        </div>
+
+                    </div>
+                    {% if post.image %}
+                    <div class="d-flex flex-row justify-content-center" style="background-color:aliceblue;">
+                        <img src="{{ post.image}}" class="card-img-top" alt="{{ post.title }}"
+                            style="max-height:400px; max-width: 437px; object-fit: cover; object-position: 0 15%;">
+                    </div>
+                    {% endif %}
+                    <div class="card-body">
+
+                        <a class="card-link" href="#">
+                            <h5 class="card-title">{{post.title | safe }}</h5>
+                        </a>
+
+                        <p class="card-text">
+                            {{ post.content | safe }}
+                        </p>
+                    </div>
+                    <div class="card-footer">
+                        <div class="d-flex flex-row">
+                            <div class="p-2 ">   
+                                <!-- <a href="#" class="card-link likebutton" data-catid="{{post.id}}">
+                                <i class="bi bi-hand-thumbs-up" id="like{{post.id}}"></i> Like</a> -->
+                                Test1
+                            </div>
+                            <div class="p-2">
+                                <!-- <a href="#" class="card-link"><i class="bi bi-chat-dots"></i> Comment</a> -->
+                                Test2
+                            </div>
+                            <div class="p-2 mx-auto">
+                                <!-- <a href="#" class="card-link"><i class="bi bi-chat-dots"></i> Delete</a> -->
+                                Test3
+                            </div>
+                            
+                            
+                            
                         </div>
                     </div>
 
                 </div>
-                <div style="background-color: #0000;">
-                    <img src="{{ post.image}}" class="card-img-top" alt="{{ post.title }}"
-                    style="max-height:300px; max-width: 337px; object-fit: cover; object-position: 0 15%;">
-                </div>
-                
-                <div class="card-body">
-                    <div class="text-muted h7 mb-2"> <i class="fa fa-clock-o"></i>{{ post.created_at }}</div>
-                    <a class="card-link" href="#">
-                        <h5 class="card-title">{{post.title | safe }}</h5>
-                    </a>
+                {% endfor %}
+                <!-- Post /////-->
 
-                    <p class="card-text">
-                        {{ post.content | safe }}
-                    </p>
-                </div>
-                <div class="card-footer">
-                    <a href="#" class="card-link"><i class="bi bi-hand-thumbs-up"></i> Like</a>
-                    <a href="#" class="card-link"><i class="bi bi-chat-dots"></i> Comment</a>
-                </div>
+
+                <!-- </div> -->
             </div>
-            {% endfor %}
-            <!-- Post /////-->
-
 
         </div>
     </div>
-</div>
 
 
     {% endblock content %}
