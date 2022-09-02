@@ -5,7 +5,7 @@
 <script>
     $(document).ready(function(){
         $('button[data-bs-target="tab"]').on('show.bs.tab', function(e) {
-            localStorage.setItem('activeTab', $(e.target).attr('data-bs-target'));
+            localStorage.setItem('activeTab', $(e.  ).attr('data-bs-target'));
         });
         var activeTab = localStorage.getItem('activeTab');
         if(activeTab){
@@ -307,10 +307,11 @@
                         $.ajax({
                             url: '{% url "deleteProfileImage" %}',
                             data: {},
-                            type: "GET",
+                                type: "GET",
                             success: function (e) {
                                 if (e.response){
-                                    location.reload();
+                                    
+                                    document.location.reload();
                                 }
                             }
                         });

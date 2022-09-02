@@ -1,54 +1,77 @@
-<div class="row">
-    <div class="col-lg-8">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Post your Update </h5>
-                <form class="row g-3" action="{% url 'add_post' %}" enctype="multipart/form-data" method="POST">{% csrf_token %}
-                    <div class="col-md-6">
-                        <div class="form-floating">
-                            <!-- <input type="text" class="form-control" id="title" placeholder="Title"> -->
-                            {{ form.title|add_class:"form-control"|attr:"placeholder:Title"|attr:"id:title"}}
-                            <label for="floatingTextarea"> Title </label>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-floating mb-3">
-                            {{ form.topic|add_class:"form-select"|attr:"id:topic"}}
-                            <label for="floatingSelect">Topic</label>
-                        </div>
-                    </div>
-                    <div class="col-md-9">
-                        <label class="btn btn-outline-info text-dark" for="id_image">
-                            <i class="bi bi-upload" style="font-size: 1rem;"></i>
-                             Click to Upload Image 
-                             {{ form.image|attr:"id:id_image"|attr:"accept:image/*" |attr:"hidden"| attr:"onchange:$('#upload-file-info').text(this.files[0].name)"}}
-                        </label>
-                        <span class='label label-info px-2' id="upload-file-info"></span>
-                        
-                    </div>
-                    <div class="col-md-11">
-                        <div class="form-floating">
-                            <!-- <textarea class="form-control" placeholder="content" id="content"
-                                style="height: 100px;"></textarea> -->
-                            {{ form.content|attr:"id:content"}}
-                            <label for="floatingTextarea"> Content </label>
-                        </div>
-                    </div>
-                    <div class="text-left">
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </div>
-                </form>
-                
-                <!-- End floating Labels Form -->
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-4">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Check your Calender</h5>
+{% extends 'base.html' %}
+{% load static %}
 
+{% block content %}
+<style>
+    input[type="checkbox"] {
+    float: left;
+    margin-right: 10px;
+    margin-top: 4px;
+}
+</style>
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h1>Anouncements & Posts</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                <li class="breadcrumb-item active">Blog</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section dashboard">
+        <div class="row">
+            <div class="col-lg-8">
+                <div id="select_form">
+                    <form action="#" method="post">{% csrf_token %}
+                        {{ form.as_p }}
+                        
+                        <input type="submit" name="submit" value="Search" />
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
-</div>
+    </section>
+</main>
+
+{% endblock content %}
+
+{% block custom_js %} 
+
+<script>
+function getCity() {
+    var countryName = document.getElementById("country").value;
+    var url = "http://localhost:8000/collections/find_cities?country_name=" + escape(countryName);
+    request.open("GET", url, true);
+    request.onreadystatechange = updatePage;
+    request.send(null);
+} 
+ 
+// what to do when http ready state changes
+function updatePage() { 
+    if (request.readyState == 4) {
+        if (request.status == 200) {
+  
+            // get response array
+            var data = JSON.parse(request.responseText); 
+            update_select($('select[name=city]'), data);
+        }  
+        // some error checking
+        else if (request.status == 404) {
+            alert("Request url does not exist");
+        }
+        else {
+            alert("Error: status code is " + request.status);
+        }
+    }
+}   
+ 
+function update_select(select, data) {
+    select.find('option').remove();
+    for (var k in data) {
+        select.append($('<option value="'+data[k]+'">'+data[k]+'</option>'));
+    }
+}
+</script>
+{% endblock custom_js %}

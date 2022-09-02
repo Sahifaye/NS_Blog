@@ -20,12 +20,14 @@ def Register(request):
             last_name=name.split(" ")[1]
         else:
             first_name=name
+            last_name=''
         password1 = request.POST['password1']
         password2 = request.POST['password2']
         print(password1, password2)
         if password1 != password2:
+            print(password1,">>>>>>>>>>>>>>>>>>>>>>>",password2)
             messages.append("Passwords do not match.")
-            return redirect('/register')
+            return render(request, 'base_templates/register.html',  {'messages':messages})
  
         user = User.objects.create_user(username, email, password1)
         user.first_name = first_name
@@ -33,7 +35,7 @@ def Register(request):
         user.save()
         messages.append("User Registered , Please Login with your credentials.")
         return render(request, 'base_templates/login.html', {'messages':messages}) 
-    return render(request, 'base_templates/register.html', {})
+    return render(request, 'base_templates/register.html',  {'messages':messages})
 
 
 def Login(request):
@@ -80,9 +82,14 @@ def EditProfile(request):
         q_dict = {k:v for k, v in request.POST.items()}
         print(q_dict)
         form = ProfileForm(data=request.POST, files=request.FILES, instance=profile)
+        print("___________", form)
         if form.is_valid():
             form.save()
             message = "Data Saved Successfully"
+            print("Data Saved Successfully .")
+            return render(request, 'base_templates/profile.html', {})
+        else:
+            message = "Some Error in the Data Shared , Please check "
             print("Data Saved Successfully .")
             return render(request, 'base_templates/profile.html', {})
     else:

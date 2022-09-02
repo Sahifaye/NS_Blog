@@ -3,7 +3,6 @@
 {% load widget_tweaks %}
 
 {% block custom_style %}
-<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
 <style>
     .gedf-wrapper {
         margin-top: 0.97rem;
@@ -33,6 +32,8 @@
     }
 </style>
 {% endblock custom_style %}
+
+{% block title %} Home {% endblock %}
 
 {% block content %}
 
@@ -114,7 +115,7 @@
                                 </div>
                             </div>
                             <div class="d-flex flex-row-reverse align-self-end">
-                                <div class="text-muted h7 mb-2"> <i class="fa fa-clock-o"></i>{{ post.created_at }}
+                                <div class="text-muted h7 mb-2"><i class="fa fa-clock-o">&nbsp;</i>{{ post.created_at }}
                                 </div>
                             </div>
                         </div>
@@ -140,9 +141,9 @@
                         <button href="#" class="btn btn-light likebutton m-2" data-catid="{{post.id}}">
                             <i class="bi bi-hand-thumbs-up" id="like{{post.id}}"></i> Like</a>
                         <button href="#" class="btn btn-light commentbuttom"><i class="bi bi-chat-dots"></i> Comment</a>
-                        
-                        <button href="#" class="btn btn-danger deletebutton" ><i class="bi bi-trash"></i> Delete</a>
-                        
+                        {% if user|lower == post.author.username|lower %}
+                        <button href="#" class="btn btn-danger deletebutton" data-catid="{{post.id}}" ><i class="bi bi-trash"></i> Delete</a>
+                        {% endif %}
                     </div>
                 </div>
                 {% endfor %}
@@ -178,8 +179,8 @@
                                 {% else %}
                                 <i class="bi bi-newspaper" style="font-size: 3rem;"></i>
                                 {% endif %}
-                                <h4><a href="#">{{ news_post.title }} </a></h4>
-                                <p>{{ news_post.content | safe }}</p>
+                                <h4><a href="{{ news_post.get_absolute_url }}">{{ news_post.title }} </a></h4>
+                                <p>{{ news_post.content|truncatewords:10|linebreaks  }}</p>
 
                             </div>
 
@@ -221,6 +222,23 @@
                 success: function (data) {
                     $('#like' + id).removeClass('bi bi-hand-thumbs-up');
                     $('#like' + id).addClass('bi bi-hand-thumbs-up-fill text-primary');
+                }
+            })
+    });
+    $('.deletebutton').click(function () {
+        var id;
+        id = $(this).attr("data-catid");
+        $.ajax(
+            {
+                type: "GET",
+                url: "delete",
+                data: {
+                    post_id: id
+                },
+                success: function (data) {
+                    if(data=='success'){
+                        document.location.reload(true)
+                    }
                 }
             })
     });

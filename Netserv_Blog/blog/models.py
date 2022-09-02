@@ -4,7 +4,12 @@ from django.urls import reverse
 from django.utils.timezone import now
 # Create your models here.
 
-
+class PersonalBlogManager(models.Manager):
+    def get_queryset(self):
+        return super(PersonalBlogManager,self).get_queryset().filter(topic='personel_blog')
+class NewsBlogManager(models.Manager):
+    def get_queryset(self):
+        return super(NewsBlogManager,self).get_queryset().filter(topic='news')
 class Blog_Post(models.Model):
     ANNOUNCEMENT = 'announcement'
     PERSONAL_BLOG = 'personel_blog'
@@ -17,12 +22,16 @@ class Blog_Post(models.Model):
     ]
     title = models.CharField(max_length=255)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    slug = models.CharField(max_length=130, blank=True, null=True)
+    slug = models.SlugField(max_length=250, unique_for_date='created_at')
     topic = models.CharField(max_length=20, choices=TOPICS, default=NEWS)
     content = models.TextField()
     created_at = models.DateTimeField(default=now)
+    updated = models.DateTimeField(auto_now=True)
     image = models.ImageField(
         upload_to="static/post_pics", blank=True, null=True)
+    objects = models.Manager()
+    personalBlog = PersonalBlogManager()
+    newsBlog = NewsBlogManager()
 
     class Meta:
         ordering = ("-created_at",)
@@ -31,10 +40,16 @@ class Blog_Post(models.Model):
         return str(self.author) + " Blog Title: " + self.title
 
     def get_absolute_url(self):
-        return reverse('blogs')
+        return reverse('post_details', args=[
+            self.created_at.year,
+            self.created_at.month,
+            self.created_at.day,self.slug
+        ])
 
 
 class Like(models.Model):
     post = models.ForeignKey(Blog_Post, on_delete=models.CASCADE)
     def __str__(self) -> str:
-        return str(self.post) 
+        return str(self.post)
+        
+

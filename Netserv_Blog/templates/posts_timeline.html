@@ -2,7 +2,20 @@
 {% load static %}
 {% load widget_tweaks %}
 
+{% block custom_style %}
+<style>
+    
 
+    .deletebutton {
+        position: absolute;
+        right: 0;
+        margin-right: 30px;
+        border: 3px;
+    }
+</style>
+{% endblock custom_style %}
+
+{% block title %} Post Timeline {% endblock %}
 
 {% block content %}
 
@@ -20,7 +33,7 @@
 
     <div class="container gedf-wrapper">
         <div class="row">
-            <div class="col-lg-12">
+            <div class="col-lg-9 ml-5">
                 <!-- <div class="col-md-8"> -->
                 <!--- \\\\\\\Post-->
                 {% for post in posts %}
@@ -58,33 +71,21 @@
                     {% endif %}
                     <div class="card-body">
 
-                        <a class="card-link" href="#">
+                        <a class="card-link" href=" {{ post.get_absolute_url }}">
                             <h5 class="card-title">{{post.title | safe }}</h5>
                         </a>
 
                         <p class="card-text">
-                            {{ post.content | safe }}
+                            {{ post.content| truncatewords:10|linebreaks | safe }}
                         </p>
                     </div>
                     <div class="card-footer">
-                        <div class="d-flex flex-row">
-                            <div class="p-2 ">   
-                                <!-- <a href="#" class="card-link likebutton" data-catid="{{post.id}}">
-                                <i class="bi bi-hand-thumbs-up" id="like{{post.id}}"></i> Like</a> -->
-                                Test1
-                            </div>
-                            <div class="p-2">
-                                <!-- <a href="#" class="card-link"><i class="bi bi-chat-dots"></i> Comment</a> -->
-                                Test2
-                            </div>
-                            <div class="p-2 mx-auto">
-                                <!-- <a href="#" class="card-link"><i class="bi bi-chat-dots"></i> Delete</a> -->
-                                Test3
-                            </div>
-                            
-                            
-                            
-                        </div>
+                        <button href="#" class="btn btn-light likebutton m-2" data-catid="{{post.id}}">
+                            <i class="bi bi-hand-thumbs-up" id="like{{post.id}}"></i> Like</a>
+                        <button href="#" class="btn btn-light commentbuttom"><i class="bi bi-chat-dots"></i> Comment</a>
+                        
+                        <button href="#" class="btn btn-danger deletebutton" ><i class="bi bi-trash"></i> Delete</a>
+                        
                     </div>
 
                 </div>
