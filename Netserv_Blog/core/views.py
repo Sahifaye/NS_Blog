@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from .models import Profile
 from .forms import ProfileForm
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 
 
 # Create your views here.
@@ -56,10 +57,12 @@ def Login(request):
     else:
         return render(request, 'base_templates/login.html', {})
 
+@login_required()
 def Logout(request):
     logout(request)
     return redirect("home")
 
+@login_required()
 def delete_ProfileImage(request):
     try:
         profile = request.user.profile
@@ -71,6 +74,7 @@ def delete_ProfileImage(request):
 
     return JsonResponse({"response":True})
 
+@login_required()
 def EditProfile(request):
     try:
         profile = request.user.profile
