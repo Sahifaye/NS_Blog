@@ -6,6 +6,7 @@ from .models import Profile
 from .forms import ProfileForm
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from blog.views import get_forcast
 
 
 # Create your views here.
@@ -76,6 +77,8 @@ def delete_ProfileImage(request):
 
 @login_required()
 def EditProfile(request):
+    
+    forcast = get_forcast()
     try:
         profile = request.user.profile
     except Profile.DoesNotExist:
@@ -98,7 +101,7 @@ def EditProfile(request):
             return render(request, 'base_templates/profile.html', {})
     else:
         profile_form = ProfileForm()
-        return render(request, 'base_templates/profile.html', {'form':profile_form})
+        return render(request, 'base_templates/profile.html', {'form':profile_form , 'forcast':forcast})
         # return render(request, 'base_templates/profile_form_test.html', {'form':profile_form})
 
 

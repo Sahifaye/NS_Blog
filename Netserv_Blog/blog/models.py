@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from django.utils.timezone import now
 # Create your models here.
+from datetime import datetime 
 
 class PersonalBlogManager(models.Manager):
     def get_queryset(self):
@@ -53,3 +54,15 @@ class Like(models.Model):
         return str(self.post)
         
 
+
+
+class Forecast(models.Model):
+    timestamp = models.DateTimeField()
+    temperatue = models.DecimalField(max_digits=12,decimal_places=2)
+    description = models.CharField(max_length=150)
+    city = models.CharField(max_length=150)
+
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.timestamp = datetime.utcnow()
+        return super(Forecast, self).save(*args, **kwargs)

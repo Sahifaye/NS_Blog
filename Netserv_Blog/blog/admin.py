@@ -1,8 +1,13 @@
+from sqlite3 import Timestamp
 from django.contrib import admin
-from .models import Blog_Post, Like
+from .models import Blog_Post, Like, Forecast
 
 # Register your models here.
 
+@admin.register(Forecast)
+class Forecast_Admin(admin.ModelAdmin):
+    search_fields = ('city', 'description')
+    list_display = ('city', 'description', 'timestamp')
 @admin.register(Like)
 class Like_PostAdmin(admin.ModelAdmin):
     search_fields = ('title', 'author')

@@ -27,6 +27,26 @@
                         <i class="bi bi-search"></i>
                     </a>
                 </li><!-- End Search Icon-->
+                <li class="nav-item dropdown">
+                    <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+                        <i class="bi bi-{{forcast.icon}}"></i>
+                        <span>{{forcast.temperature_in_c}} C </span>
+                    </a><!-- End Notification Icon -->
+                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
+                        
+                        <li class="dropdown-header">
+                            Currently in {{forcast.city}}
+                        </li>
+                        <li class="notification-item">
+                            <i class="bi bi-exclamation-circle text-warning"></i>
+                            <div>
+                                <h4>{{forcast.description}}</h4>
+                                <p>{{forcast.temperature_in_f}} F | {{forcast.temperature_in_c}} C</p>
+                                <p>{{forcast.updatetime}} min. ago</p>
+                            </div>
+                        </li>
+                    </ul>   
+                </li>
                 {% if request.user.is_authenticated %}
                 <li class="nav-item dropdown">
 
